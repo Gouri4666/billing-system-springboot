@@ -1,0 +1,129 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Bill History</title>
+
+<style>
+
+body{
+font-family:Arial, sans-serif;
+background:#f4f6f9;
+margin:0;
+padding:0;
+}
+
+/* NAVBAR */
+
+.navbar{
+background:#1e73e8;
+color:white;
+padding:15px;
+font-size:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.nav-links{
+display:flex;
+gap:10px;
+}
+
+.nav-link{
+color:white;
+text-decoration:none;
+background:#0d47a1;
+padding:8px 12px;
+border-radius:4px;
+}
+
+/* CONTAINER */
+
+.container{
+width:80%;
+margin:auto;
+background:white;
+padding:25px;
+margin-top:25px;
+border-radius:8px;
+box-shadow:0 4px 8px rgba(0,0,0,0.1);
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th{
+background:#2c2c2c;
+color:white;
+padding:12px;
+text-align:left;
+}
+
+td{
+padding:12px;
+border-bottom:1px solid #ddd;
+text-align:left;
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<span>Billing System</span>
+
+<div class="nav-links">
+
+<a href="/billing" class="nav-link">Billing</a>
+<a href="/products" class="nav-link">Products</a>
+<a href="/billHistory" class="nav-link">Billing History</a>
+
+</div>
+
+</div>
+
+<div class="container">
+
+<h2>Bill History</h2>
+
+<table>
+
+<thead>
+<tr>
+<th>Bill ID</th>
+<th>Total (Rs.)</th>
+<th>Date</th>
+</tr>
+</thead>
+
+<tbody>
+
+<tr th:each="b : ${bills}">
+
+<td th:text="${b.id}"></td>
+
+<td th:text="${b.total}"></td>
+
+<td th:text="${#temporals.format(b.billDate,'yyyy-MM-dd')}"></td>
+
+</tr>
+
+</tbody>
+
+</table>
+
+</div>
+
+</body>
+</html>

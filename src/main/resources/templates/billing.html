@@ -1,0 +1,352 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org">
+
+<head>
+<title>Billing System - Generate Bill</title>
+
+<style>
+
+body{
+font-family: Arial, sans-serif;
+background:#f4f6f9;
+margin:0;
+padding:0;
+}
+
+/* NAVBAR */
+
+.navbar{
+background:#1e73e8;
+color:white;
+padding:15px;
+font-size:20px;
+display:flex;
+justify-content:space-between;
+align-items:center;
+}
+
+.nav-links{
+display:flex;
+gap:10px;
+}
+
+.nav-link{
+color:white;
+text-decoration:none;
+background:#0d47a1;
+padding:8px 12px;
+border-radius:4px;
+}
+
+/* CONTAINER */
+
+.container{
+width:80%;
+margin:auto;
+background:white;
+padding:20px;
+margin-top:20px;
+border-radius:8px;
+}
+
+/* TABLE */
+
+table{
+width:100%;
+border-collapse:collapse;
+margin-top:20px;
+}
+
+th{
+background:#2c2c2c;
+color:white;
+padding:10px;
+text-align:left;
+}
+
+td{
+padding:10px;
+border-bottom:1px solid #ddd;
+}
+
+/* BUTTONS */
+
+.btn{
+padding:8px 16px;
+border:none;
+border-radius:4px;
+cursor:pointer;
+}
+
+.add-btn{
+background:#1abc9c;
+color:white;
+}
+
+.remove-btn{
+background:#ff4d4d;
+color:white;
+}
+
+.save-btn{
+background:#27ae60;
+color:white;
+margin-top:20px;
+width:100%;
+}
+
+.print-btn{
+background:#1e73e8;
+color:white;
+margin-top:10px;
+width:100%;
+}
+
+/* FORM */
+
+.form-group{
+margin-bottom:15px;
+display:flex;
+gap:10px;
+align-items:center;
+}
+
+select,input{
+padding:8px;
+border:1px solid #ccc;
+border-radius:4px;
+}
+
+/* TOTAL */
+
+.total-section{
+text-align:right;
+margin-top:30px;
+font-size:28px;
+font-weight:bold;
+border-top:3px solid black;
+padding-top:10px;
+}
+
+/* PRINT STYLE */
+
+@media print{
+
+body{
+background:white;
+}
+
+.no-print{
+display:none !important;
+}
+
+.container{
+width:100%;
+margin:0;
+padding:0;
+}
+
+.navbar{
+background:transparent;
+color:black;
+padding:0;
+border-bottom:2px solid #000;
+margin-bottom:20px;
+}
+
+.nav-links{
+display:none;
+}
+
+}
+
+</style>
+
+</head>
+
+<body>
+
+<!-- NAVBAR -->
+
+<div class="navbar">
+
+<span>Billing System</span>
+
+<div class="nav-links">
+
+<a href="/billing" class="nav-link">Billing</a>
+
+<a href="/products" class="nav-link">Products</a>
+
+<a href="/billHistory" class="nav-link">Billing History</a>
+
+</div>
+
+</div>
+
+<div class="container">
+
+<!-- ADD ITEMS -->
+
+<div class="no-print" style="margin-bottom:30px;padding:15px;background:#e3f2fd;border-radius:4px;">
+
+<h3>Add Items to Bill</h3>
+
+<div class="form-group">
+
+<select id="productSelect">
+
+<option value="" disabled selected>Select a Product</option>
+
+<option
+th:each="p : ${products}"
+th:value="${p.price}"
+th:text="${p.name + ' - Rs. ' + p.price}"
+th:data-name="${p.name}">
+</option>
+
+</select>
+
+<input
+type="number"
+id="quantityInput"
+placeholder="Quantity"
+min="1"
+value="1"
+style="width:80px">
+
+<button class="btn add-btn" onclick="addToCart()">Add to Bill</button>
+
+</div>
+
+</div>
+
+<h2>Billing Summary</h2>
+
+<table id="billTable">
+
+<thead>
+<tr>
+<th>Item Name</th>
+<th>Price (Rs.)</th>
+<th>Quantity</th>
+<th>Subtotal (Rs.)</th>
+<th class="no-print">Action</th>
+</tr>
+</thead>
+
+<tbody id="cartBody">
+</tbody>
+
+</table>
+
+<div class="total-section">
+Grand Total : Rs. <span id="grandTotal">0.00</span>
+</div>
+
+<button class="btn save-btn no-print" onclick="saveBill()">
+Save Bill
+</button>
+
+<button class="btn print-btn no-print" onclick="window.print()">
+Print Bill
+</button>
+
+</div>
+
+<script>
+
+let grandTotal = 0;
+
+function addToCart(){
+
+const select=document.getElementById("productSelect");
+const quantityInput=document.getElementById("quantityInput");
+
+if(select.selectedIndex===0 || quantityInput.value<=0){
+alert("Please select a product and valid quantity.");
+return;
+}
+
+const option=select.options[select.selectedIndex];
+
+const name=option.getAttribute("data-name");
+const price=parseFloat(option.value);
+const quantity=parseInt(quantityInput.value);
+const subtotal=price*quantity;
+
+const tbody=document.getElementById("cartBody");
+
+const tr=document.createElement("tr");
+
+tr.innerHTML=`
+<td>${name}</td>
+<td>${price.toFixed(2)}</td>
+<td>${quantity}</td>
+<td>${subtotal.toFixed(2)}</td>
+<td class="no-print">
+<button class="btn remove-btn"
+onclick="removeItem(this,${subtotal})">
+Remove
+</button>
+</td>
+`;
+
+tbody.appendChild(tr);
+
+grandTotal+=subtotal;
+
+updateTotal();
+
+select.selectedIndex=0;
+quantityInput.value=1;
+
+}
+
+function removeItem(button,subtotal){
+
+const tr=button.parentElement.parentElement;
+
+tr.remove();
+
+grandTotal-=subtotal;
+
+updateTotal();
+
+}
+
+function updateTotal(){
+
+document.getElementById("grandTotal").innerText=
+grandTotal.toFixed(2);
+
+}
+
+function saveBill(){
+
+if(grandTotal<=0){
+alert("No items in bill!");
+return;
+}
+
+fetch("/saveBill",{
+method:"POST",
+headers:{
+"Content-Type":"application/x-www-form-urlencoded"
+},
+body:"total="+grandTotal
+})
+.then(response=>response.text())
+.then(data=>{
+alert("Bill saved successfully!");
+})
+.catch(error=>{
+alert("Error saving bill");
+});
+
+}
+
+</script>
+
+</body>
+</html>
