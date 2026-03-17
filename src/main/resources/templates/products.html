@@ -1,170 +1,174 @@
 <!DOCTYPE html>
 <html xmlns:th="http://www.thymeleaf.org">
-
 <head>
 <title>Billing System - Products</title>
-
+<link href="https://fonts.googleapis.com/css2?family=Poppins:wght@400;500;600&display=swap" rel="stylesheet">
+<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
 <style>
-
-body{
-font-family: Arial, sans-serif;
-background:#f4f6f9;
-margin:0;
-padding:0;
+body {
+    font-family: 'Poppins', sans-serif;
+    background: #f0f2f5;
+    margin: 0;
+    padding: 0;
+    display: flex;
+    color: #333;
 }
-
-/* NAVBAR */
-
-.navbar{
-background:#1e73e8;
-color:white;
-padding:15px;
-font-size:20px;
-display:flex;
-justify-content:space-between;
-align-items:center;
+.sidebar {
+    width: 250px;
+    background: #1e293b;
+    height: 100vh;
+    position: fixed;
+    top: 0;
+    left: 0;
+    display: flex;
+    flex-direction: column;
+    padding-top: 20px;
+    box-shadow: 4px 0 10px rgba(0,0,0,0.1);
+    z-index: 1000;
 }
-
-.nav-links{
-display:flex;
-gap:10px;
+.sidebar h2 {
+    color: #fff;
+    text-align: center;
+    margin-bottom: 30px;
+    font-size: 22px;
+    font-weight: 600;
 }
-
-.nav-link{
-color:white;
-text-decoration:none;
-background:#0d47a1;
-padding:8px 12px;
-border-radius:4px;
+.nav-link {
+    color: #cbd5e1;
+    text-decoration: none;
+    padding: 15px 25px;
+    font-size: 16px;
+    display: flex;
+    align-items: center;
+    gap: 15px;
+    transition: all 0.3s ease;
 }
-
-/* CONTAINER */
-
-.container{
-width:80%;
-margin:auto;
-background:white;
-padding:25px;
-margin-top:25px;
-border-radius:8px;
-box-shadow:0 4px 8px rgba(0,0,0,0.1);
+.nav-link:hover, .nav-link.active {
+    background: #3b82f6;
+    color: #fff;
+    border-left: 5px solid #60a5fa;
 }
-
-/* TABLE */
-
-table{
-width:100%;
-border-collapse:collapse;
-margin-top:20px;
+.main-content {
+    margin-left: 250px;
+    flex: 1;
+    padding: 30px;
+    min-height: 100vh;
 }
-
-th{
-background:#2c2c2c;
-color:white;
-padding:12px;
-text-align:left;
+.container {
+    width: 100%;
+    margin: 0 auto;
+    background: white;
+    padding: 30px;
+    border-radius: 12px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.05);
 }
-
-td{
-padding:12px;
-border-bottom:1px solid #ddd;
-text-align:left;
+table {
+    width: 100%;
+    border-collapse: separate;
+    border-spacing: 0;
+    margin-top: 20px;
+    border-radius: 8px;
+    overflow: hidden;
 }
-
-th:last-child,
-td:last-child{
-text-align:center;
+th {
+    background: #f8fafc;
+    color: #475569;
+    padding: 15px;
+    text-align: left;
+    font-weight: 600;
+    border-bottom: 2px solid #e2e8f0;
 }
-
-/* BUTTONS */
-
-.btn{
-padding:6px 14px;
-border:none;
-border-radius:4px;
-cursor:pointer;
-font-size:14px;
+td {
+    padding: 15px;
+    border-bottom: 1px solid #f1f5f9;
+    color: #475569;
 }
-
-.add-btn{
-background:#1abc9c;
-color:white;
+tr:hover td {
+    background: #f8fafc;
 }
-
-.delete-btn{
-background:#ff4d4d;
-color:white;
-margin-left:5px;
+th:last-child, td:last-child {
+    text-align: center;
 }
-
-.edit-btn{
-background:#f39c12;
-color:white;
+.btn {
+    padding: 10px 20px;
+    border: none;
+    border-radius: 6px;
+    cursor: pointer;
+    font-size: 14px;
+    font-weight: 500;
+    transition: all 0.2s;
+    display: inline-flex;
+    align-items: center;
 }
-
-/* INPUTS */
-
-input{
-padding:8px;
-border:1px solid #ccc;
-border-radius:4px;
-margin-right:10px;
+.add-btn { background: #3b82f6; color: white; display: inline-flex; align-items: center;}
+.add-btn:hover { background: #2563eb; }
+.delete-btn { background: #ef4444; color: white; margin-left: 5px; }
+.delete-btn:hover { background: #dc2626; }
+.edit-btn { background: #f59e0b; color: white; }
+.edit-btn:hover { background: #d97706; }
+input {
+    padding: 10px 15px;
+    border: 1px solid #e2e8f0;
+    border-radius: 6px;
+    margin-right: 10px;
+    font-size: 14px;
+    outline: none;
+    font-family: inherit;
 }
+input:focus { border-color: #3b82f6; }
 
 /* MODAL */
-
-.modal{
-display:none;
-position:fixed;
-z-index:1000;
-left:0;
-top:0;
-width:100%;
-height:100%;
-background:rgba(0,0,0,0.5);
+.modal {
+    display: none;
+    position: fixed;
+    z-index: 1050;
+    left: 0;
+    top: 0;
+    width: 100%;
+    height: 100%;
+    background: rgba(0,0,0,0.5);
+    backdrop-filter: blur(4px);
 }
-
-.modal-content{
-background:white;
-margin:10% auto;
-padding:20px;
-width:400px;
-border-radius:6px;
+.modal-content {
+    background: white;
+    margin: 10% auto;
+    padding: 30px;
+    width: 400px;
+    border-radius: 12px;
+    box-shadow: 0 10px 40px rgba(0,0,0,0.2);
+    position: relative;
+    animation: modalFadeIn 0.3s ease;
 }
-
-.close{
-float:right;
-font-size:22px;
-cursor:pointer;
+@keyframes modalFadeIn {
+    from { opacity: 0; transform: translateY(-20px); }
+    to { opacity: 1; transform: translateY(0); }
 }
-
-.update-btn{
-background:#3498db;
-color:white;
+.close {
+    position: absolute;
+    right: 20px;
+    top: 20px;
+    font-size: 24px;
+    cursor: pointer;
+    color: #94a3b8;
+    transition: color 0.2s;
 }
-
+.close:hover { color: #333; }
+.update-btn { background: #3b82f6; color: white; width: 100%; margin-top: 15px; }
+.update-btn:hover { background: #2563eb; }
+.modal-content label { display: block; margin-top: 15px; margin-bottom: 5px; font-weight: 500; color: #475569; }
+.modal-content input { width: box-sizing; width: 100%; margin-right: 0; margin-bottom: 10px; box-sizing: border-box;}
 </style>
-
 </head>
-
 <body>
 
-<!-- NAVBAR -->
-
-<div class="navbar">
-
-<span>Billing System</span>
-
-<div class="nav-links">
-
-<a href="/billing" class="nav-link">Billing</a>
-<a href="/products" class="nav-link">Products</a>
-<a href="/billHistory" class="nav-link">Billing History</a>
-
+<div class="sidebar">
+    <h2>Billing System</h2>
+    <a href="/products" class="nav-link active">📦 Products</a>
+    <a href="/billing" class="nav-link">💳 Billing</a>
+    <a href="/billHistory" class="nav-link">📜 History</a>
 </div>
 
-</div>
-
+<div class="main-content">
 <div class="container">
 
 <h2>Products</h2>
@@ -278,6 +282,7 @@ modal.style.display="none";
 }
 
 </script>
-
+</div>
+</div>
 </body>
 </html>
