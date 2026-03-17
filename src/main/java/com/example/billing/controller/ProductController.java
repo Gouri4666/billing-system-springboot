@@ -12,7 +12,7 @@ public class ProductController {
 
     private final ProductRepository repo;
 
-    // Constructor Injection
+    // Constructor 
     public ProductController(ProductRepository repo){
         this.repo = repo;
     }
@@ -31,10 +31,10 @@ public class ProductController {
         return "redirect:/products";
     }
 
-    // Update Product (used by popup edit form)
+    // Update Product 
     @PostMapping("/updateProduct")
     public String updateProduct(@ModelAttribute Product product){
-        repo.save(product); // Hibernate updates if ID exists
+        repo.save(product); 
         return "redirect:/products";
     }
 

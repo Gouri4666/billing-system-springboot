@@ -26,7 +26,7 @@ public class BillingController {
         return "billing";
     }
 
-    // Save Bill (AJAX - no page reload)
+    // Save Bill 
     @PostMapping("/saveBill")
     @ResponseBody
     public String saveBill(@RequestParam double total){
